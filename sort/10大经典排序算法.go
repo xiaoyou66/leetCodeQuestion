@@ -3,6 +3,10 @@
 // @Date 2021/03/09
 package sort
 
+import (
+	"math"
+)
+
 // 插入排序
 // 时间复杂度 n^2
 // 因为我们这里是两层for循环，运气好的话，如果是有序的那么只需要执行一层，时间复杂度就是n
@@ -170,15 +174,191 @@ func selectSort(arr []int){
 
 // 建初堆
 func createHeap(arr []int)  {
-
+	// 这里我们使用筛选法来建初堆，我们依次把、[n/2],[n/2]-1,....,1的节点都调整为堆即可
+	n := len(arr) - 1
+	// 根据堆的性质，在完全二叉树中所有序号大于 [n/2]的节点都是叶子，
+	// 所以我们只需要调整 1 - n/2 这个区间把这几个点调整为大根堆就行
+	// 这里调整堆传入了一个开始点和结束点
+	for i :=n/2;i>=0;i--{
+		adjustHeap(arr,i,n)
+	}
 }
 
 // 调整堆
 func adjustHeap(arr []int,s int,m int)  {
-
+	// 保存起始点的值作为临变量
+	rc:=arr[s]
+	// 我们使用筛选法来调整堆
+	// 这里使用了堆的性质
+	// 当 ki>=k2i 且 ki >= k2i+1 或 ki <=k2i 且 ki <= k2i+1
+	for j:=2*s;j<=m;j*=2{
+		if j<m && arr[j]<arr[j+1]{ j++ }
+		if rc >= arr[j] { break}
+		arr[s] = arr[j]
+		s=j
+	}
+	arr[s] = rc
 }
 
 // 堆排序
+// 时间复杂度 nlogn
+// 这里耗时操作在于筛选和调整 筛选需要n-1次 然后n个节点的二叉树深度为logn +1
+// 空间复杂度 1 因为只需要一个临时空间
 func heapSort(arr []int)  {
+	// 先建堆，保证初始的时候是一个堆
+	createHeap(arr)
+	// 开始进行for循环，进行堆排序
+	for i:=len(arr)-1;i>0;i--{
+		// 这里我们把最大的那个最后一个（这个指的是当前堆的最大一个）互换
+		// 因为我们堆排序后0号是最大的
+		arr[0],arr[i] = arr[i],arr[0]
+		// 我们i号是最大的了，所以我们忽略i，从i-1开始进行调整
+		adjustHeap(arr,0,i-1)
+	}
+}
 
+// 合并表
+// 注意这里我们arr2是一个空数组，然后arr1的low和mid是一个排好序的数组，mid+1和high也是一个排好序的数组
+// 这个函数的作用就是把两个数组合并为一个数组，放入arr2中
+func Merge(arr1 []int,arr2 []int,low int,mid int,high int)  {
+	// 这里我们使用i和j来表示arr1数组的两部分，然后k就表示arr2数组的位置
+	i,j,k:=low,mid+1,low
+	// 只要有一个数组到头了，我们就介绍排序
+	for i <= mid && j<=high {
+		// 因为我们要合并两个数组，所以我们需要判断一下数组的两部分到底谁大
+		if arr1[i] > arr1[j] {
+			// 注意，k表示arr2的位置，然后j表示的是 mid+1 到high这个数组
+			arr2[k] = arr1[j];k++;j++
+		} else {
+			// 注意，k表示arr2的位置，然后j表示的是 low 到mid 这个数组
+			arr2[k] = arr1[i];k++;i++
+		}
+	}
+	// 剩余部分因为已经是一个有序的数组了，所以我们直接按顺序加到arr2就行
+	for i<=mid {
+		arr2[k] = arr1[i];i++;k++
+	}
+	for j<=high {
+		arr2[k] = arr1[j];j++;k++
+	}
+}
+
+// 2-路归并排序
+// 时间复杂度nlogn
+// 空间复杂度 n 因为我们排序的时候需要申请n个空间来存储
+func mSort(arr []int,arr2 []int,low int,high int)  {
+	// 当low和high相等的时候，这个时候大小为1，我们直接放到arr2就行
+	if low == high{
+		arr2[low] = arr[low]
+	} else {
+		// 我们准备开始进行拆分,我们需要把我们的数组拆成两部分
+		arr3:=make([]int,high+1)
+		// 直接取mid作为数组的分界点
+		mid:= (low + high) / 2
+		// 首先我们把low和mid 进行排序并放入arr3中
+		mSort(arr,arr3,low,mid)
+		// 然后我们把mid+1和high 进行排序并放入arr3中
+		mSort(arr,arr3,mid+1,high)
+		// 最后我们得到的数组在arr3中已经排好序并分成了两部分
+		// 因为arr2是一个空数组，所以我们把arr3再进行排序，最后就是合并为一个有序的表并放入arr2中
+		Merge(arr3,arr2,low,mid,high)
+	}
+}
+
+// 计数排序,这里我们传入一个数组，一个最小值，一个最大值
+// 时间复杂度 n+k
+// 空间复杂度 n+k
+func countingSort(arr []int, minvalue, maxValue int){
+	// 首先我们建立一个统计数组,为了节省空间我们直接取最大值和最小值的差+1的空间，这个时候最大值在最后一个，最小值在第一个
+	count:=make([]int,maxValue-minvalue+1)
+	// 遍历数组，统计出现的次数，注意我们计算的时候需要减minValue
+	for _,v:=range arr{
+		count[v-minvalue] ++
+	}
+	// 最后我们输出数组，这里我们使用i来标记arr数组
+	i:=0
+	// 遍历count
+	for k,v:=range count{
+		// 如果count数组为0那么就不管，如果不为0那么就为几，我们就输出几次
+		if v!=0 {
+			// 输出v次
+			for j:=0;j<v;j++{
+				arr[i] = minvalue + k
+				i ++
+			}
+		}
+	}
+}
+
+// 桶排序，这里我们传入一个最大值，还有一为个桶的数量
+// 时间复杂度 为n+k
+// 空间复杂度为 n+k
+func sortBucket(arr []int,max int,num int) {
+	// 创建桶，大小为我们传入桶的数量
+	buckets := make([][]int,num)
+	var index int
+	// 遍历数组
+	for _,v := range arr{
+		// 分配桶 index = value * (n-1)/k 这里我们使用公式来确放入的位置
+		index = v * (num-1) / max
+		// 把我们的数字放入桶内
+		buckets[index] = append(buckets[index],v)
+	}
+	// 桶内排序
+	tmpPos := 0
+	// 这里我们遍历每一个桶
+	for k:=0; k < num; k++ {
+		// 获取桶里面数据的长度
+		bucketLen := len(buckets[k])
+		// 如果我们这个桶大小为0，那么我们就对桶里面进行排序
+		if bucketLen>0{
+			// 使用插入排序对数组进行排序
+			insertSort(buckets[k])
+			// 我们把排序好的部分复制到数组中
+			copy(arr[tmpPos:],buckets[k])
+			// 数组位置加上桶的大小，开始保存下一个桶
+			tmpPos +=bucketLen
+		}
+	}
+}
+
+// 基数排序，这里我们传入数组和这个数组的最大值
+func radixSort(theArray []int,max int){
+	// 因为前面我们获取了最大值，这里我们获取一下最大值的位数
+	var count = 0
+	for max % 10>0{
+		max /= 10
+		count++
+	}
+	// 给桶中对应的位置放数据
+	for i:=0; i<count; i++ {
+		// 根据不同的位数，我们来获取10的n次方，用于后面获取每位的值
+		theData := int(math.Pow10(i))
+		// 建立空桶
+		bucket:=make([][]int,10)
+		// 遍历数组
+		for k:=0; k<len(theArray); k++{
+			// 这里我们进行取余操作，目的是为了获取这个数组在每位上的值
+			theResidue := (theArray[k]/theData) %10
+			// 获取到了位数后我们直接放入对应的桶中
+			bucket[theResidue] = append(bucket[theResidue],theArray[k])
+		}
+
+		// 一遍循环完之后需要把数组二维数据进行重新排序，比如数组开始是10 1 18 30 23 12 7 5 18 233 144 ，循环个位数
+		// 循环之后的结果为10 30 1 12 23 233 144 5 7 18 18 ，然后循环十位数，结果为1 5 7 10 12 18 18 23 30 233 144
+		// 最后循环百位数，结果为1 5 7 10 12 18 18 23 30 144 233
+		var x = 0
+		// 遍历我们的桶
+		for p:=0; p<len(bucket); p++ {
+			for q:=0; q<len(bucket[p]); q++ {
+				// 这里按照桶的结构，按桶的顺序把桶里面的数据放入数组中
+				if bucket[p][q]!=0 {
+					theArray[x] = bucket[p][q]
+					x++
+				}else {
+					break
+				}
+			}
+		}
+	}
 }
