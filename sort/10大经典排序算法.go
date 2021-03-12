@@ -223,7 +223,7 @@ func heapSort(arr []int)  {
 func Merge(arr1 []int,arr2 []int,low int,mid int,high int)  {
 	// 这里我们使用i和j来表示arr1数组的两部分，然后k就表示arr2数组的位置
 	i,j,k:=low,mid+1,low
-	// 只要有一个数组到头了，我们就介绍排序
+	// 只要有一个数组到头了，我们就结束排序
 	for i <= mid && j<=high {
 		// 因为我们要合并两个数组，所以我们需要判断一下数组的两部分到底谁大
 		if arr1[i] > arr1[j] {
