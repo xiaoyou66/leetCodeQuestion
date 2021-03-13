@@ -10,7 +10,9 @@ type ListNode struct {
 
 // go里面的do while循环参考 https://yourbasic.org/golang/do-while-loop/
 // 链表找环这个问题用快慢指针是通用解法，为什么两个指针一定会相遇呢？ 其实快慢指针一个看相对静止，另一个是运动的，所以这两个追的上 参考https://www.zhihu.com/question/23208893
-// 然后为什么fast到头节点两个移动为什么相遇的点一定是环呢？ 
+// 然后为什么fast到头节点两个移动为什么相遇的点一定是环呢？
+
+// 这个讲的不错 https://github.com/labuladong/fucking-algorithm/blob/master/%E7%AE%97%E6%B3%95%E6%80%9D%E7%BB%B4%E7%B3%BB%E5%88%97/%E5%8F%8C%E6%8C%87%E9%92%88%E6%8A%80%E5%B7%A7.md
 func detectCycle(head *ListNode) *ListNode {
 	slow,fast:=head,head
 	for  {
