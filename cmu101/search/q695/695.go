@@ -1,7 +1,7 @@
 // @Description 
 // @Author 小游
 // @Date 2021/03/16
-package search
+package q695
 
 // 使用栈的写法
 func maxAreaOfIsland1(grid [][]int) int {
@@ -20,7 +20,7 @@ func maxAreaOfIsland1(grid [][]int) int {
 				localArea = 1
 				grid[i][j] = 0
 				// 自己定义一个栈
-				island:=Stack{}
+				island:= Stack{}
 				// 把当前值放入栈中
 				island.Push([]int{i,j})
 				// 遍历直到栈为空位置
@@ -30,7 +30,7 @@ func maxAreaOfIsland1(grid [][]int) int {
 					// 我们分别依次判断当前值的上下左右是否为空
 					for k := 0; k < 4; k++ {
 						// 这里我们使用了一个小技巧，每相邻两位即为上下左右四个方向之一
-						x =r+ direction[k];y = c+direction[k+1]
+						x =r+ direction[k];y = c+ direction[k+1]
 						// 这里我们还需要判断一下x，y的范围是否在矩形内，以免越界
 						if x >= 0 && x < m && y >= 0 && y < n && grid[x][y] == 1 {
 							// 这里我们就把grid置为0，然后把这个点放入栈中
@@ -82,7 +82,7 @@ func maxAreaOfIsland(grid [][]int) int {
 			// 当当前这个点为1的时候，我们就获取一下当前的区域信息
 			if grid[i][j] == 1 {
 				// 使用dfs来获取当前的地域信息
-				area:=dfs(grid,i,j)
+				area:= dfs(grid,i,j)
 				// 更新最大的区域
 				if area > maxArea {
 					maxArea = area
@@ -106,12 +106,12 @@ func dfs(grid [][]int,r int,c int) int {
 	// 对当前位置进行遍历，判断上下左右四个方向
 	for k := 0; k < 4; k++ {
 		// 这里我们通过direction数组来实现获取当前位置的上下左右
-		x=direction[k]+r
-		y=direction[k+1]+c
+		x= direction[k]+r
+		y= direction[k+1]+c
 		// 确保这个值在矩阵的范围内
 		if x>=0 && y>=0 && x<len(grid) && y<len(grid[0]) {
 			// 注意这我们不需要判断当前位置是否为0，因为dfs会自己计算，如果为0就会返回0
-			area+=dfs(grid,x,y)
+			area+= dfs(grid,x,y)
 		}
 	}
 	return area
