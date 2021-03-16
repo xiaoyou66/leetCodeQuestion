@@ -10,6 +10,7 @@ func topKFrequent(nums []int, k int) []int {
 	max:=0
 	for _,v:=range nums{
 		count[v] ++
+		// 这里获取出现次数最大的值
 		if count[v] > max {
 			max = count[v]
 		}
@@ -20,9 +21,18 @@ func topKFrequent(nums []int, k int) []int {
 	for i,v:=range count{
 		bucket[v]=append(bucket[v], i)
 	}
+	// 下面我们就可以找出前n高的元素了
 	var ans []int
-	for i:=len(bucket)-1;i>=len(bucket)-k;i-- {
-		ans = append(ans,bucket[i]...)
+	for i:=len(bucket)-1;i>=0;i-- {
+		// 因为我们桶里面是可能出现不同数的情况所以我们需要遍历
+		for _,v:=range bucket[i] {
+			// 当我们找出这前n个时，我们就立即返回
+			if len(ans) < k {
+				ans = append(ans,v)
+			} else {
+				return ans
+			}
+		}
 	}
 	return ans
 }
