@@ -1,7 +1,7 @@
 // @Description
 // @Author 小游
 // @Date 2021/03/25
-package q241
+package q384
 
 import (
 	"fmt"
@@ -9,5 +9,7 @@ import (
 )
 
 func Test_question(t *testing.T) {
-	fmt.Println(diffWaysToCompute("2-1-1"))
+	s := Constructor([]int{4, 9, 5})
+	fmt.Println(s.Shuffle())
+	fmt.Println(s.Reset())
 }

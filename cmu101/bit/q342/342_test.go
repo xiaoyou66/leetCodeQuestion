@@ -1,7 +1,7 @@
 // @Description
 // @Author 小游
 // @Date 2021/03/25
-package q241
+package q342
 
 import (
 	"fmt"
@@ -9,5 +9,5 @@ import (
 )
 
 func Test_question(t *testing.T) {
-	fmt.Println(diffWaysToCompute("2-1-1"))
+	fmt.Println(isPowerOfFour(16))
 }
