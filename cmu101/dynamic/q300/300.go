@@ -1,6 +1,6 @@
 // @Description https://leetcode-cn.com/problems/longest-increasing-subsequence/
 // @Author 小游
-// @Date 2021/03/20
+// @Date 2021/03/q20
 package q300
 
 func lengthOfLIS(nums []int) int {
