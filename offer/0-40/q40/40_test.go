@@ -1,7 +1,7 @@
 // @Description
 // @Author 小游
-// @Date 2021/03/31
-package q38
+// @Date 2021/04/07
+package q40
 
 import (
 	"fmt"
@@ -9,6 +9,6 @@ import (
 )
 
 func Test_question(t *testing.T) {
-	fmt.Println(permutation("abc"))
+	fmt.Println(getLeastNumbers([]int{3, 2, 1}, 2))
 	//fmt.Println(cal(35)+cal(37))
 }
