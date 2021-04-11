@@ -3,7 +3,9 @@
 // @Date 2021/04/09
 package q61
 
-import "sort"
+import (
+	"sort"
+)
 
 func isStraight1(nums []int) bool {
 	repeat := make(map[int]bool)
