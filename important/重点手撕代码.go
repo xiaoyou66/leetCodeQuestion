@@ -8,6 +8,31 @@ import (
 	"sort"
 )
 
+func finMid(arr []int, low int, high int) int {
+	tmp := arr[low]
+	for low < high {
+		for low < high && arr[high] >= tmp {
+			high--
+		}
+		arr[low] = arr[high]
+		for low < high && arr[low] <= tmp {
+			low++
+		}
+		arr[high] = arr[low]
+	}
+	arr[low] = tmp
+	return low
+}
+
+// 快速排序
+func quickSort(arr []int, low int, high int) {
+	if low < high {
+		mid := finMid(arr, low, high)
+		quickSort(arr, low, mid-1)
+		quickSort(arr, mid+1, high)
+	}
+}
+
 // 二分查找
 func binarySearch(arr []int, target int) bool {
 	low := 0

@@ -15,6 +15,17 @@ package main
 边界场景，一人名字较长者，譬如，Ali Ba Ba和Xie Cheng，那最后一个Ba需要全部剔除掉。
 */
 
-func main() {
+func incr() func() int {
+	var x int
+	return func() int {
+		x++
+		return x
+	}
+}
 
+func main() {
+	var dummy [3]int
+	for i := 0; i < len(dummy); i++ {
+		println(i) // 0, 1, 2
+	}
 }

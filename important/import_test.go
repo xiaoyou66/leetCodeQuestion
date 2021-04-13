@@ -8,9 +8,16 @@ import (
 	"testing"
 )
 
+// 快排测试
+func Test_quickSort(t *testing.T) {
+	arr := []int{4, 8, 6, 45, 12, 787, 4, 5, 6, 1}
+	quickSort(arr, 0, len(arr)-1)
+	fmt.Println(arr)
+}
+
 // 二分查找测试
 func Test_binary(t *testing.T) {
-	fmt.Println(binarySearch([]int{0, 5, 16, 20, 27, 30, 36, 44, 55, 60, 67, 71}, 72))
+	fmt.Println(binarySearch([]int{0, 5, 16, 20, 27, 30, 36, 44, 55, 60, 67, 71}, 55))
 }
 
 // 两数之和测试
