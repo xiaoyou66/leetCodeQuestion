@@ -72,33 +72,47 @@ func coinChange(coins []int, amount int) int {
 // 定义一个辅助函数来凑零钱
 // 我们传入硬币数，需要凑齐金钱数，以及我们定义的一个记忆函数
 func aux(coins []int, rem int, count []int) int {
-	// 如果我们要凑的数目小于0，那么就直接返回-1
 	if rem < 0 {
 		return -1
-	}
-	// 如果为0，我们直接返回0
-	if rem == 0 {
+	} else if rem == 0 {
 		return 0
-	}
-	// 如果数组中已经记忆了这个值，我们就直接返回即可
-	if count[rem-1] != 0 {
+	} else if count[rem-1] != 0 {
 		return count[rem-1]
 	}
-	// 如果没有的话，我们就直接计算
 	min := math.MaxInt32
-	// 我们遍历硬币数来进行拼凑
-	// 这里就是遍历所有的硬币，找到一个结果最小的情况
 	for _, v := range coins {
-		res := aux(coins, rem-v, count)
-		if res >= 0 && res < min {
-			min = res + 1
+		tmp := aux(coins, rem-v, count)
+		if tmp >= 0 && tmp < min {
+			min = tmp + 1
 		}
 	}
-	// 如果找到了那么我们就直接返回，否则返回-1表示不存在
 	if min == math.MaxInt32 {
 		count[rem-1] = -1
 	} else {
 		count[rem-1] = min
 	}
 	return count[rem-1]
+}
+
+// 动态规划
+func coinChange1(coins []int, amount int) int {
+	dp := make([]int, amount+1)
+	for k := range dp {
+		dp[k] = amount + 1
+	}
+	dp[0] = 0
+	for i := 1; i <= amount; i++ {
+		for j := 0; j < len(coins); j++ {
+			if coins[j] <= i {
+				if dp[i-coins[j]]+1 < dp[i] {
+					dp[i] = dp[i-coins[j]] + 1
+				}
+			}
+		}
+	}
+	if dp[amount] > amount {
+		return -1
+	} else {
+		return dp[amount]
+	}
 }

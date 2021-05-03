@@ -10,6 +10,7 @@ import (
 
 // 最长公共子串测试
 func Test_LCS(t *testing.T) {
+	fmt.Println(getLCS("ABCDEFG", "ABZDEFKG"))
 	fmt.Println(getLCS2("ABCDEFG", "ABZDEFKG"))
 }
 
